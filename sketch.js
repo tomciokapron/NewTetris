@@ -1,3 +1,5 @@
+
+
 function setup(){
 	scena = new cScena();
 	scena.setup(40);
@@ -5,10 +7,11 @@ function setup(){
 
 function draw(){
 	scena.draw();
-	if(keyIsDown(DOWN_ARROW))
-		scena.setSpeed(10);
+	if(keyIsDown(DOWN_ARROW)){
+		scena.setSpeed(scena.fast);
+	}
 	else
-		scena.setSpeed(30);
+		scena.setSpeed(scena.normal);
 }
 
 function keyPressed() {
@@ -17,7 +20,7 @@ function keyPressed() {
 	} else if (keyCode === RIGHT_ARROW) {
 	   scena.turn(1);
 	} else if(keyCode === UP_ARROW){
-		scena.rotate();
+		scena.rotatee();
 	}
 }
 

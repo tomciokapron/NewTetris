@@ -2,13 +2,21 @@
 function cBlok(){
 	this.shapes = floor(random(0,6));
 	this.colorr = random(255);
+	// this.shapes__ = [
+	// 	[0,0, 0,1],
+	// 	[0,0, 0,1, 0,2],
+	// 	[0,0, 0,1, 0,2, 0,3],
+	// 	[0,0, 0,1, 0,2, 1,2],
+	// 	[1,0, 1,1, 1,2, 0,2],
+	// 	[0,0, 0,1, 0,2, 1,1]
+	// ];
 	this.shapes__ = [
-		[0,0, 0,1],
-		[0,0, 0,1, 0,2],
-		[0,0, 0,1, 0,2, 0,3],
-		[0,0, 0,1, 0,2, 1,2],
-		[1,0, 1,1, 1,2, 0,2],
-		[0,0, 0,1, 0,2, 1,1]
+		[4,-1, 4,0],
+		[4,-1, 4,0, 4,1],
+		[4,-1, 4,0, 4,1, 4,2],
+		[4,-1, 4,0, 4,1, 5,1],
+		[5,-1, 5,0, 5,1, 4,1],
+		[4,-1, 4,0, 4,1, 5,0]
 	];
 	this.position = this.shapes__[this.shapes];
 	this.active = true;
@@ -93,6 +101,9 @@ function cBlok(){
 		this.shapes = n;
 	}
 
+	this.setR = function(n){
+		this.R = n;
+	}
 
 	this.getPosition = function(){
 		return this.position;
@@ -102,8 +113,12 @@ function cBlok(){
 		return this.shapes;
 	}
 
+	this.getR = function(){
+		return this.R;
+	}
+
 	this.rotate = function(){
-		if(this.active){
+		if(true){
 			switch(this.shapes){
 				case 0:{
 					if(this.R == 0){

@@ -3,14 +3,17 @@ function cScena(){
 	createCanvas(400,600);
 	this.frameCounter = frameCount;
 	this.speed = 30;
-	
+	this.fast = 5;
+	this.normal = _.cloneDeep(this.speed);
+
 	this.setup = function(blockSize){
 		this.w = blockSize;
  		cols = floor(width/this.w); 
  		rows = floor(height/this.w);
  		this.grid = this.make2Darray(cols,rows);
  		this.active = new cBlok();
- 		// import _ from "lodash";
+ 		this.points = 0;
+ 		this.level = 1;
  	}
 
 
@@ -24,6 +27,7 @@ function cScena(){
  		this.printGrid();
  		this.printActive();
  		this.printGridArr();
+ 		this.printPoints();
  		this.checkIfCanGoLower();
  		this.checkRows();
  	}
@@ -32,10 +36,21 @@ function cScena(){
  	this.frameUpdate = function(){
  		if(frameCount - this.frameCounter >= this.speed){
  			this.frameCounter = frameCount;
+ 			//this.checkIfCanGoLower();
  			this.active.update();
  		}
  	}
 
+
+ 	this.updateSpeed = function(n){
+ 		this.speed += n;
+ 	}
+
+ 	this.printPoints = function(){
+ 		textSize(32);
+ 		text('points: ' + this.points, 250, 30);
+ 		text('level: ' + this.level, 250, 65);
+ 	}
  	
  	this.printGrid = function(){
  		for(var i=0; i<rows; i++){
@@ -89,8 +104,16 @@ function cScena(){
  				else
  					n++;
  				
-				if(n == 10)
+				if(n == 10){
  					this.deleteRow(i);
+ 					this.points += 1;
+ 					if(this.points % 5 == 0){
+ 						this.level += 1;
+ 						this.speed -= 3;
+ 						this.normal = _.cloneDeep(this.speed);
+
+ 					}
+				}
  			}
  		}
  		//return -1;
@@ -113,6 +136,10 @@ function cScena(){
 
  	this.setSpeed = function(speed){
  		this.speed = speed;
+ 	}
+
+ 	this.getSpeed = function(){
+ 		return this.speed;
  	}
 
  	this.make2Darray = function(cols, rows){
@@ -140,15 +167,14 @@ function cScena(){
 		}
 	}
 
-	this.rotate = function(){
-		var rotated = new cBlok();
-		rotated.setShape(Object.assign({}, this.active.getShape()));
-		rotated.setPosition(Object.assign({}, this.active.getPosition()));
+	this.rotatee = function(){
+		var rotated = _.cloneDeep(this.active);
+		
 		rotated.rotate();
+	
 		var flag = 0;
 		for (var i = 0; i < rotated.getPosition().length; i+=2) {
 			//zabezpieczenie przed wypadaniem poza tor
-			console.log(rotated.getPosition()[i]);
 			if (rotated.getPosition()[i] < 0 || rotated.getPosition()[i] >= cols){
 				flag = 1;
 				break;
@@ -158,10 +184,17 @@ function cScena(){
 				break;
 			}
 			//zabezpieczenie przed obracaniem w istniejące klocki
+			if(this.grid[rotated.getPosition()[i]][rotated.getPosition()[i]] == 1){
+				flag = 1;
+				break;
+			}
+			
 		}
-		
-		if(flag == 0){	
-			console.log(flag);
+
+		console.log(flag);
+
+		if(flag == 0){
+			console.log('obrucilem');	
 			this.active.rotate();
 		}
 	}	
