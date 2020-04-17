@@ -2,9 +2,10 @@ function cScena(){
 	
 	createCanvas(400,600);
 	this.frameCounter = frameCount;
+
 	this.speed = 30;
 	this.fast = 5;
-	this.normal = _.cloneDeep(this.speed);
+	this.normal = 30;//_.cloneDeep(this.speed);
 
 	this.setup = function(blockSize){
 		this.w = blockSize;
@@ -38,7 +39,18 @@ function cScena(){
  			this.frameCounter = frameCount;
  			//this.checkIfCanGoLower();
  			this.active.update();
+ 			console.log(this.speed);
  		}
+ 	}
+
+ 	this.updatePoints = function(){
+ 		this.points+=1;
+ 		if(this.points	% 2 == 0){
+ 			//this.speed -= 3;
+ 			this.normal -= 3;	
+ 			//console.log("hej");
+ 		}
+ 		//console.log(this.normal);
  	}
 
 
@@ -64,7 +76,7 @@ function cScena(){
 
  	this.printActive = function(){
  		for (var i = 0; i < this.active.getPosition().length/2; i++) {
- 			fill(255,204,0);
+ 			fill(this.active.getColor());
  			square(this.active.getPosition()[i*2]*this.w, 
  					this.active.getPosition()[(i*2)+1]*this.w ,this.w);
  		}
@@ -73,8 +85,8 @@ function cScena(){
  	this.printGridArr = function(){
  		for (var i = 0; i < cols; i++) {
  			for (var j = 0; j < rows; j++) {
- 				if(this.grid[i][j] == 1){
- 					fill(255,204,0);
+ 				if(this.grid[i][j] != undefined){  //tutaj
+ 					fill(this.grid[i][j]);
  					square(i*this.w, j*this.w, this.w);
  				}
  			}
@@ -88,7 +100,7 @@ function cScena(){
 		}
 		else {
 			for (var i = 0; i < this.active.getPosition().length; i+=2) {
-				if(this.grid[this.active.getPosition()[i]][this.active.getPosition()[i+1]+1] == 1){
+				if(this.grid[this.active.getPosition()[i]][this.active.getPosition()[i+1]+1] != undefined){ //tutak
 					this.changeActive();
 				}
 			}
@@ -106,13 +118,14 @@ function cScena(){
  				
 				if(n == 10){
  					this.deleteRow(i);
- 					this.points += 1;
- 					if(this.points % 5 == 0){
- 						this.level += 1;
- 						this.speed -= 3;
- 						this.normal = _.cloneDeep(this.speed);
+ 					// this.points += 1;
+ 					// if(this.points % 2 == 0){
+ 					// 	this.level += 1;
+ 					// 	this.speed -= 0.5;
+ 					// 	this.normal = _.cloneDeep(this.speed);
 
- 					}
+ 					// }
+ 					// console.log(this.normal);
 				}
  			}
  		}
@@ -120,6 +133,7 @@ function cScena(){
  	}
 
  	this.deleteRow = function(j){
+ 		this.updatePoints();
  		for (var i = 0; i < cols; i++) {
  			this.grid[i].splice(j,1);
  			this.grid[i].unshift(undefined);
@@ -129,7 +143,7 @@ function cScena(){
 
  	this.changeActive = function(){
  		for (var i = 0; i < this.active.getPosition().length; i+=2) {
- 			this.grid[this.active.getPosition()[i]][this.active.getPosition()[i+1]] = 1;
+ 			this.grid[this.active.getPosition()[i]][this.active.getPosition()[i+1]] = this.active.getColor();  //tutaj
  		}
  		this.active = new cBlok();
  	}
@@ -152,7 +166,7 @@ function cScena(){
 	this.turn = function(n){ //n=1 prawo n=-1lewo
 		var flag = 0;
 		for (var i = 0; i < this.active.getPosition().length; i+=2) {
-			if(this.grid[this.active.getPosition()[i]+n][this.active.getPosition()[i+1]] == 1){
+			if(this.grid[this.active.getPosition()[i]+n][this.active.getPosition()[i+1]] != undefined){ //tutaj
 				flag = 1;
 
 				break;
@@ -184,7 +198,7 @@ function cScena(){
 				break;
 			}
 			//zabezpieczenie przed obracaniem w istniejące klocki
-			if(this.grid[rotated.getPosition()[i]][rotated.getPosition()[i]] == 1){
+			if(this.grid[rotated.getPosition()[i]][rotated.getPosition()[i]] != undefined){  //tutaj
 				flag = 1;
 				break;
 			}

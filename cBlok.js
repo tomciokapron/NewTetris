@@ -1,7 +1,7 @@
 
 function cBlok(){
 	this.shapes = floor(random(0,6));
-	this.colorr = random(255);
+	this.colorr = [random(255),random(255),random(255)];
 	// this.shapes__ = [
 	// 	[0,0, 0,1],
 	// 	[0,0, 0,1, 0,2],
@@ -28,6 +28,10 @@ function cBlok(){
 					this.position[i]+=1;
 			}
 		}
+	}
+
+	this.getColor = function(){
+		return this.colorr;
 	}
 
 	this.moveDown = function(){
